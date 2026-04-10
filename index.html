@@ -235,12 +235,32 @@
                 transform: scale(0.5);
             }
         }
+
+        .center-heart {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            animation: breathe 2.5s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
+            z-index: 1;
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.15);
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="guide">轻触屏幕 ♥ 释放浪漫</div>
+    <div class="center-heart">💗</div>
 
     <script>
         const colors = [
