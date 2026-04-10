@@ -240,11 +240,34 @@
             position: fixed;
             top: 50%;
             left: 50%;
+            width: 120px;
+            height: 108px;
             transform: translate(-50%, -50%);
-            font-size: 5rem;
             animation: breathe 2.5s ease-in-out infinite;
-            text-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
             z-index: 1;
+        }
+
+        .center-heart::before,
+        .center-heart::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 50%, #ff69b4 100%);
+            border-radius: 60px 60px 0 0;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .center-heart::before {
+            left: 60px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .center-heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
         }
 
         @keyframes breathe {
@@ -260,7 +283,7 @@
 
 <body>
 
-    <div class="center-heart">💗</div>
+    <div class="center-heart"></div>
 
     <script>
         const colors = [
