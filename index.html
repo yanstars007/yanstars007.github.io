@@ -1,555 +1,234 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Document</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录页面</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%);
-            touch-action: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .flower {
-            position: fixed;
-            pointer-events: none;
-            z-index: 1000;
-        }
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
 
-        .petal {
-            position: absolute;
-            width: 35px;
-            height: 45px;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            opacity: 0;
-            transform-origin: center;
-            box-shadow: inset -3px -3px 8px rgba(0,0,0,0.15), inset 3px 3px 8px rgba(255,255,255,0.3);
-        }
+    .login-title {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: 600;
+    }
 
-        .petal-animate {
-            animation: petalFall 2s ease-out forwards;
-        }
+    .form-group {
+      margin-bottom: 20px;
+    }
 
-        @keyframes petalFall {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(1) rotate(0deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(var(--rot));
-            }
-        }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+    }
 
-        .splash {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: splashEffect 0.8s ease-out forwards;
-        }
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e1e1e1;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
 
-        @keyframes splashEffect {
-            0% {
-                opacity: 1;
-                transform: scale(0);
-            }
-            50% {
-                opacity: 0.8;
-            }
-            100% {
-                opacity: 0;
-                transform: scale(3);
-            }
-        }
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
 
-        .center-circle {
-            position: fixed;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ffd700 0%, #e84a5f 100%);
-            pointer-events: none;
-            animation: centerPop 0.6s ease-out forwards;
-        }
+    .form-group input.error {
+      border-color: #e74c3c;
+    }
 
-        @keyframes centerPop {
-            0% {
-                opacity: 1;
-                transform: scale(0);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1);
-            }
-        }
+    .error-message {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 5px;
+    }
 
-        .heart {
-            position: fixed;
-            font-size: 2rem;
-            pointer-events: none;
-            animation: heartFloat 2s ease-out forwards;
-            z-index: 2000;
-        }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-        @keyframes heartFloat {
-            0% {
-                opacity: 1;
-                transform: scale(0) translateY(0);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2) translateY(-50px);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.8) translateY(-150px);
-            }
-        }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
 
-        .love-text {
-            position: fixed;
-            font-size: 1.5rem;
-            color: #ff6b81;
-            text-shadow: 0 0 10px rgba(255,107,129,0.5);
-            pointer-events: none;
-            animation: textFade 2.5s ease-out forwards;
-            z-index: 2000;
-            white-space: nowrap;
-        }
+    .login-btn:active {
+      transform: translateY(0);
+    }
 
-        @keyframes textFade {
-            0% {
-                opacity: 0;
-                transform: translateY(0) scale(0.5);
-            }
-            20% {
-                opacity: 1;
-                transform: translateY(-20px) scale(1);
-            }
-            80% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-80px) scale(0.8);
-            }
-        }
+    .login-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
 
-        .falling-heart {
-            position: fixed;
-            font-size: 1.5rem;
-            pointer-events: none;
-            animation: fall linear forwards;
-            z-index: 1500;
-        }
+    .message {
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 500;
+    }
 
-        @keyframes fall {
-            0% {
-                opacity: 1;
-                transform: translateY(-50px) rotate(0deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(110vh) rotate(360deg);
-            }
-        }
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
 
-        .bubble {
-            position: fixed;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,107,129,0.4));
-            pointer-events: none;
-            animation: bubbleFloat 2s ease-out forwards;
-            z-index: 1800;
-        }
-
-        @keyframes bubbleFloat {
-            0% {
-                opacity: 1;
-                transform: scale(0);
-            }
-            50% {
-                opacity: 0.8;
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1.5) translateY(-100px);
-            }
-        }
-
-        .guide {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-            text-align: center;
-            pointer-events: none;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        .sparkle {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: sparkle 1s ease-out forwards;
-        }
-
-        @keyframes sparkle {
-            0% {
-                opacity: 1;
-                transform: scale(0);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.5);
-            }
-        }
-
-        .center-heart {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 120px;
-            height: 108px;
-            transform: translate(-50%, -50%);
-            animation: breathe 2.5s ease-in-out infinite;
-            z-index: 1;
-        }
-
-        .center-heart::before,
-        .center-heart::after {
-            content: '';
-            position: absolute;
-            width: 60px;
-            height: 90px;
-            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 50%, #ff69b4 100%);
-            border-radius: 60px 60px 0 0;
-            box-shadow: 0 0 30px rgba(255, 105, 180, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.3);
-        }
-
-        .center-heart::before {
-            left: 60px;
-            transform: rotate(-45deg);
-            transform-origin: 0 100%;
-        }
-
-        .center-heart::after {
-            left: 0;
-            transform: rotate(45deg);
-            transform-origin: 100% 100%;
-        }
-
-        @keyframes breathe {
-            0%, 100% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.15);
-            }
-        }
-    </style>
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
 </head>
-
 <body>
+  <div id="app">
+    <div class="login-container">
+      <h1 class="login-title">欢迎登录</h1>
+      
+      <form @submit.prevent="handleLogin">
+        <div class="form-group">
+          <label for="username">用户名</label>
+          <input 
+            type="text" 
+            id="username" 
+            v-model="username" 
+            :class="{ error: errors.username }"
+            placeholder="请输入用户名"
+          />
+          <div v-if="errors.username" class="error-message">{{ errors.username }}</div>
+        </div>
 
-    <div class="center-heart"></div>
+        <div class="form-group">
+          <label for="password">密码</label>
+          <input 
+            type="password" 
+            id="password" 
+            v-model="password" 
+            :class="{ error: errors.password }"
+            placeholder="请输入密码"
+          />
+          <div v-if="errors.password" class="error-message">{{ errors.password }}</div>
+        </div>
 
-    <script>
-        const colors = [
-            '#e84a5f', '#c44569', '#ff6b81', '#ff4757', '#dc143c',
-            '#b22222', '#cd5c5c', '#f08080', '#fa8072', '#ffb6c1',
-            '#ff69b4', '#ff1493', '#c71585', '#db7093', '#ff6347'
-        ];
+        <button type="submit" class="login-btn" :disabled="loading">
+          {{ loading ? '登录中...' : '登录' }}
+        </button>
+      </form>
 
-        const loveWords = [
-            '喜欢你', '爱你', '么么哒', '比心', '甜甜的',
-            '好想你', '想抱抱', '你是我的', '心肝宝贝', '小可爱',
-            '最爱你了', '乖乖', '宝贝', '亲亲', '爱你哟'
-        ];
+      <div v-if="message" :class="['message', messageType]">
+        {{ messageText }}
+      </div>
+    </div>
+  </div>
 
-        const hearts = ['❤️', '💕', '💖', '💗', '💓', '💘', '💝'];
+  <script>
+    const { createApp } = Vue;
 
-        let lastTap = 0;
-        let longPressTimer = null;
-
-        function createFlower(x, y) {
-            const flower = document.createElement('div');
-            flower.className = 'flower';
-            flower.style.left = x + 'px';
-            flower.style.top = y + 'px';
-            document.body.appendChild(flower);
-
-            const center = document.createElement('div');
-            center.className = 'center-circle';
-            flower.appendChild(center);
-
-            const petalCount = 8 + Math.floor(Math.random() * 5);
-            for (let i = 0; i < petalCount; i++) {
-                const petal = document.createElement('div');
-                petal.className = 'petal';
-                const angle = (i / petalCount) * 360;
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                const distance = 60 + Math.random() * 80;
-                const tx = Math.cos(angle * Math.PI / 180) * distance;
-                const ty = Math.sin(angle * Math.PI / 180) * distance;
-                const rot = Math.random() * 720 - 360;
-                const delay = Math.random() * 0.2;
-
-                petal.style.cssText = `
-                    background: ${color};
-                    --tx: ${tx}px;
-                    --ty: ${ty}px;
-                    --rot: ${rot}deg;
-                    animation-delay: ${delay}s;
-                `;
-                flower.appendChild(petal);
-
-                setTimeout(() => {
-                    petal.classList.add('petal-animate');
-                }, 10);
-            }
-
-            for (let i = 0; i < 12; i++) {
-                const splash = document.createElement('div');
-                splash.className = 'splash';
-                const angle = (i / 12) * 360;
-                const splashColors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffc0cb'];
-                const color = splashColors[Math.floor(Math.random() * splashColors.length)];
-                splash.style.cssText = `
-                    background: ${color};
-                    left: ${Math.cos(angle * Math.PI / 180) * 30}px;
-                    top: ${Math.sin(angle * Math.PI / 180) * 30}px;
-                    animation-delay: ${0.1 + Math.random() * 0.2}s;
-                `;
-                flower.appendChild(splash);
-            }
-
-            setTimeout(() => {
-                flower.remove();
-            }, 2500);
+    createApp({
+      data() {
+        return {
+          username: '',
+          password: '',
+          errors: {
+            username: '',
+            password: ''
+          },
+          loading: false,
+          message: null,
+          messageType: ''
         }
-
-        function showHeart(x, y) {
-            const heart = document.createElement('div');
-            heart.className = 'heart';
-            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-            heart.style.left = (x - 1) + 'px';
-            heart.style.top = (y - 1) + 'px';
-            document.body.appendChild(heart);
-
-            const text = document.createElement('div');
-            text.className = 'love-text';
-            text.textContent = loveWords[Math.floor(Math.random() * loveWords.length)];
-            text.style.left = (x - 50) + 'px';
-            text.style.top = (y + 20) + 'px';
-            document.body.appendChild(text);
-
-            setTimeout(() => {
-                heart.remove();
-                text.remove();
-            }, 2500);
+      },
+      computed: {
+        messageText() {
+          return this.message;
         }
+      },
+      methods: {
+        validate() {
+          this.errors = { username: '', password: '' };
+          let isValid = true;
 
-        function createSparkles(x, y) {
-            for (let i = 0; i < 15; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 30 + Math.random() * 50;
-                sparkle.style.cssText = `
-                    background: ${color};
-                    left: ${x + Math.cos(angle) * distance}px;
-                    top: ${y + Math.sin(angle) * distance}px;
-                    animation-delay: ${Math.random() * 0.3}s;
-                `;
-                document.body.appendChild(sparkle);
+          if (!this.username.trim()) {
+            this.errors.username = '用户名不能为空';
+            isValid = false;
+          }
 
-                setTimeout(() => sparkle.remove(), 1500);
-            }
+          if (!this.password) {
+            this.errors.password = '密码不能为空';
+            isValid = false;
+          } else if (this.password.length < 6) {
+            this.errors.password = '密码长度至少为 6 位';
+            isValid = false;
+          }
+
+          return isValid;
+        },
+        async handleLogin() {
+          if (!this.validate()) {
+            return;
+          }
+
+          this.loading = true;
+          this.message = null;
+
+          // 模拟登录请求
+          await new Promise(resolve => setTimeout(resolve, 1500));
+
+          // 模拟登录验证（演示用）
+          if (this.username === 'admin' && this.password === '123456') {
+            this.message = '登录成功！欢迎回来';
+            this.messageType = 'success';
+          } else {
+            this.message = '用户名或密码错误（提示：admin/123456）';
+            this.messageType = 'error';
+          }
+
+          this.loading = false;
         }
-
-        function createBubbleRain(x, y) {
-            for (let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    const bubble = document.createElement('div');
-                    bubble.className = 'bubble';
-                    bubble.style.left = (x - 15 + Math.random() * 30) + 'px';
-                    bubble.style.top = (y - 15 + Math.random() * 30) + 'px';
-                    document.body.appendChild(bubble);
-
-                    setTimeout(() => bubble.remove(), 2000);
-                }, i * 50);
-            }
-        }
-
-        function createFallingHeart() {
-            const heart = document.createElement('div');
-            heart.className = 'falling-heart';
-            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-            heart.style.left = Math.random() * window.innerWidth + 'px';
-            heart.style.animationDuration = (3 + Math.random() * 3) + 's';
-            document.body.appendChild(heart);
-
-            setTimeout(() => heart.remove(), 6000);
-        }
-
-        function createFloatingHearts(x, y) {
-            for (let i = 0; i < 8; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.textContent = '❤️';
-                const angle = (i / 8) * 360;
-                const distance = 80 + Math.random() * 40;
-                heart.style.cssText = `
-                    left: ${x + Math.cos(angle * Math.PI / 180) * distance}px;
-                    top: ${y + Math.sin(angle * Math.PI / 180) * distance}px;
-                    animation-delay: ${i * 0.1}s;
-                    animation-duration: 1.5s;
-                `;
-                document.body.appendChild(heart);
-
-                setTimeout(() => heart.remove(), 2000);
-            }
-        }
-
-        // 定时飘落爱心
-        setInterval(() => {
-            if (Math.random() > 0.5) {
-                createFallingHeart();
-            }
-        }, 1500);
-
-        // 定时自动飘落更多爱心
-        setTimeout(() => {
-            setInterval(() => {
-                for (let i = 0; i < 3; i++) {
-                    setTimeout(createFallingHeart, i * 300);
-                }
-            }, 8000);
-        }, 5000);
-
-        // Touch events
-        document.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const x = touch.clientX;
-            const y = touch.clientY;
-
-            const now = Date.now();
-            if (now - lastTap < 300) {
-                createBubbleRain(x, y);
-                createFloatingHearts(x, y);
-                lastTap = 0;
-            } else {
-                lastTap = now;
-                createFlower(x - 15, y - 15);
-                showHeart(x, y);
-                createSparkles(x, y);
-            }
-
-            longPressTimer = setTimeout(() => {
-                createFloatingHearts(x, y);
-                for (let i = 0; i < 5; i++) {
-                    setTimeout(() => createFallingHeart(), i * 200);
-                }
-            }, 500);
-        }, { passive: false });
-
-        document.addEventListener('touchend', () => {
-            if (longPressTimer) {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
-            }
-        });
-
-        document.addEventListener('touchmove', () => {
-            if (longPressTimer) {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
-            }
-        });
-
-        // Click event for desktop
-        document.addEventListener('click', (e) => {
-            const x = e.clientX;
-            const y = e.clientY;
-            createFlower(x - 15, y - 15);
-            showHeart(x, y);
-            createSparkles(x, y);
-        });
-
-        document.addEventListener('dblclick', (e) => {
-            const x = e.clientX;
-            const y = e.clientY;
-            createBubbleRain(x, y);
-            createFloatingHearts(x, y);
-        });
-
-        // 摇晃检测
-        if (window.DeviceMotionEvent) {
-            let lastX, lastY, lastZ;
-            let shakeCount = 0;
-
-            window.addEventListener('devicemotion', (e) => {
-                const x = e.accelerationIncludingGravity.x;
-                const y = e.accelerationIncludingGravity.y;
-                const z = e.accelerationIncludingGravity.z;
-
-                if (lastX && lastY && lastZ) {
-                    const deltaX = Math.abs(x - lastX);
-                    const deltaY = Math.abs(y - lastY);
-                    const deltaZ = Math.abs(z - lastZ);
-
-                    if (deltaX > 15 || deltaY > 15 || deltaZ > 15) {
-                        shakeCount++;
-                        if (shakeCount > 3) {
-                            for (let i = 0; i < 10; i++) {
-                                setTimeout(createFallingHeart, i * 150);
-                            }
-                            shakeCount = 0;
-                        }
-                    }
-                }
-
-                lastX = x;
-                lastY = y;
-                lastZ = z;
-            });
-        }
-    </script>
-
+      }
+    }).mount('#app');
+  </script>
 </body>
-
 </html>
