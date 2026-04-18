@@ -517,11 +517,13 @@
     });
 
     // 监听登录状态
-    const observer = new MutationObserver(() => {
+    const checkLogin = setInterval(() => {
       const welcome = document.querySelector('.welcome-text');
-      canInteract = !!welcome;
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+      if (welcome) {
+        canInteract = true;
+        clearInterval(checkLogin);
+      }
+    }, 100);
   </script>
 </body>
 </html>
